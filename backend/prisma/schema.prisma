@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  name       String
+  password   String
+  role       Role     @default(PLAYER)
+  createdSessions Session[] @relation("CreatedSessions")
+  joinedSessions   PlayerSession[]
+}
+
+model Sport {
+  id       String   @id @default(uuid())
+  name     String   @unique
+  sessions Session[]
+}
+
+model Session {
+  id          String          @id @default(uuid())
+  sport       Sport           @relation(fields: [sportId], references: [id])
+  sportId     String
+  creator     User            @relation("CreatedSessions", fields: [creatorId], references: [id])
+  creatorId   String
+  date        DateTime
+  time        String
+  venue       String
+  additionalPlayers Int
+  existingPlayers   String[]  
+  joinedPlayers     PlayerSession[]
+  isCancelled       Boolean   @default(false)
+  cancelReason      String?
+  createdAt         DateTime  @default(now())
+}
+
+model PlayerSession {
+  id        String  @id @default(uuid())
+  session   Session @relation(fields: [sessionId], references: [id])
+  sessionId String
+  player    User    @relation(fields: [playerId], references: [id])
+  playerId  String
+  joinedAt  DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  PLAYER
+}
