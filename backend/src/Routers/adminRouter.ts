@@ -12,7 +12,7 @@ router.post("/createsport", async (req: Request, res: Response) => {
     }
     const sport = await prisma.sport.create({
       data: {
-        name: name,
+        sportName: name,
       },
     });
     res.json({
@@ -27,6 +27,15 @@ router.get("/getsports", async (req: Request, res: Response) => {
   try {
     const sports = await prisma.sport.findMany();
     res.json(sports);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.get("/reports", async (req: Request, res: Response) => {
+  try {
+    const reports = await prisma.sportSession.findMany();
+    res.json(reports);
   } catch (error) {
     res.status(400).json({ error });
   }

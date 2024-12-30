@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import express, { Request, Response } from "express";
 import adminRouter from "./adminRouter";
+import sessionRouter from "./sessionRouter";
+import usersessionRouter from "./usersessionRoutes";
 export const prisma = new PrismaClient();
 
 const router = express.Router();
@@ -9,7 +11,8 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 router.use("/admin", adminRouter);
-
+router.use("/session", sessionRouter);
+router.use("/usersession", usersessionRouter);
 router.post("/signup", async (req: Request, res: Response) => {
   const { email, password, name } = req.body;
   try {

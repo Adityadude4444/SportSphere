@@ -7,49 +7,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id         String   @id @default(uuid())
-  email      String   @unique
-  name       String
-  password   String
-  role       Role     @default(PLAYER)
-  createdSessions Session[] @relation("CreatedSessions")
-  joinedSessions   PlayerSession[]
+model Admin {
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  password String
 }
 
 model Sport {
-  id       String   @id @default(uuid())
-  name     String   @unique
-  sessions Session[]
+  id       Int            @id @default(autoincrement())
+  sportName String        @unique
+  sessions SportSession[] @relation("SportSessions")
 }
 
-model Session {
-  id          String          @id @default(uuid())
-  sport       Sport           @relation(fields: [sportId], references: [id])
-  sportId     String
-  creator     User            @relation("CreatedSessions", fields: [creatorId], references: [id])
-  creatorId   String
-  date        DateTime
-  time        String
-  venue       String
-  additionalPlayers Int
-  existingPlayers   String[]  
-  joinedPlayers     PlayerSession[]
-  isCancelled       Boolean   @default(false)
-  cancelReason      String?
-  createdAt         DateTime  @default(now())
+model SportSession {
+  id                  Int             @id @default(autoincrement())
+  sport               Sport           @relation("SportSessions", fields: [sportId], references: [id])
+  sportId             Int
+  name                String
+  players             Json
+  playersHave         Int
+  playersNeeded       Int
+  startTime           DateTime
+  venue               String
+  date                DateTime
+  cancellationStatus  Boolean         @default(false)
+  cancellationReason  String
+  user                User            @relation("UserSessions", fields: [userId], references: [id])
+  userId              Int
+  userSessions        UserSession[]   @relation("SessionUser")
 }
 
-model PlayerSession {
-  id        String  @id @default(uuid())
-  session   Session @relation(fields: [sessionId], references: [id])
-  sessionId String
-  player    User    @relation(fields: [playerId], references: [id])
-  playerId  String
-  joinedAt  DateTime @default(now())
+model User {
+  id          Int             @id @default(autoincrement())
+  name        String
+  email       String          @unique
+  password    String
+  isAdmin     Boolean         @default(false)
+  sessions    SportSession[]  @relation("UserSessions")
+  userSessions UserSession[]  @relation("UserSessions")
 }
 
-enum Role {
-  ADMIN
-  PLAYER
+model UserSession {
+  id         Int          @id @default(autoincrement())
+  user       User         @relation("UserSessions", fields: [userId], references: [id])
+  userId     Int
+  session    SportSession @relation("SessionUser", fields: [sessionId], references: [id])
+  sessionId  Int
 }
