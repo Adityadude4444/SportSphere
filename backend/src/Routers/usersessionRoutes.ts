@@ -49,8 +49,7 @@ router.delete(
   async (req: Request & { user?: { id: number } }, res: Response) => {
     const { sessionid } = req.params;
     const sessionIdNumber = parseInt(sessionid, 10);
-    const userId1 = req.user?.id;
-
+    const userId1 = req.user;
     if (isNaN(sessionIdNumber)) {
       return res.status(400).json({ error: "Invalid session ID" });
     }
@@ -62,7 +61,7 @@ router.delete(
     try {
       const userSession = await prisma.userSession.findFirst({
         where: {
-          userId: userId1,
+          userId: userId1.id,
           sessionId: sessionIdNumber,
         },
       });

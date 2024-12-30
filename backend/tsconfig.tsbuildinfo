@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/routers/adminrouter.ts","./src/routers/mainroute.ts"],"version":"5.6.2"}
+{"root":["./src/index.ts","./src/routers/adminrouter.ts","./src/routers/mainroute.ts","./src/routers/sessionrouter.ts","./src/routers/usersessionroutes.ts","./src/middleware/authenticate.ts","./src/types/express.d.ts"],"version":"5.6.2"}

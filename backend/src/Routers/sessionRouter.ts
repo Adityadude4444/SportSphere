@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 import { Request, Response } from "express";
 import { prisma } from "./mainRoute";
-
+router.use(express.json());
 router.post("/createsession", async (req: Request, res: Response) => {
   const {
     sportId,
@@ -25,31 +25,41 @@ router.post("/createsession", async (req: Request, res: Response) => {
       !additionalPlayers ||
       !name
     ) {
-      res.status(400).json({ error: "All fields are required" });
-      return;
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ error: "Invalid date format" });
+    }
+
+    const parsedDateTime = new Date(`${date}T${time}:00Z`);
+    if (isNaN(parsedDateTime.getTime())) {
+      return res.status(400).json({ error: "Invalid time format" });
     }
 
     const session = await prisma.sportSession.create({
       data: {
         name,
-        sportId,
-        userId: creatorId,
-        date: new Date(date),
-        startTime: time,
+        sportId: Number(sportId),
+        userId: Number(creatorId),
+        date: parsedDate,
+        startTime: parsedDateTime,
         venue,
         playersHave: 0,
-        playersNeeded: additionalPlayers,
+        playersNeeded: Number(additionalPlayers),
         players: existingPlayers,
         cancellationStatus: false,
         cancellationReason: "",
       },
     });
 
-    res.json({
+    res.status(201).json({
       sessionId: session.id,
     });
-  } catch (error) {
-    res.status(400).json({ error });
+  } catch (error: any) {
+    console.error("Error creating session:", error);
+    res.status(500).json({ error: error.message || "Internal server error" });
   }
 });
 

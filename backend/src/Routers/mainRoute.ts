@@ -57,12 +57,12 @@ router.post("/login", async (req: Request, res: Response) => {
       return;
     }
     const token = jwt.sign(user.id, process.env.JWT_SECRET);
-    localStorage.setItem("token", token);
     res.json({
       token,
       userId: user.id,
     });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error });
   }
 });
