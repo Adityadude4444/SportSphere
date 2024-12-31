@@ -32,13 +32,4 @@ router.get("/getsports", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/reports", async (req: Request, res: Response) => {
-  try {
-    const reports = await prisma.sportSession.findMany();
-    res.json(reports);
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
-
 export default router;
