@@ -64,6 +64,7 @@ const Authlogin = () => {
             }
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("userId", res.data.userId);
+            localStorage.setItem("name", res.data.name);
             navigator("/dashboard");
           } catch (error: any) {
             console.log("Error while logging in: ", error);

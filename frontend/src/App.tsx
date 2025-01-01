@@ -6,6 +6,8 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Sportsessions from "./pages/Sportsessions";
 import Signup from "./pages/Signup";
+import Getinfosession from "./components/Getinfosession";
+import Createsession from "./pages/Createsession";
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/sport/:id" element={<Sportsessions />} />
+        <Route path="/session/:id" element={<Getinfosession />} />
+        <Route path="/sport/create/:sportid" element={<Createsession />} />
       </Routes>
     </BrowserRouter>
   );
