@@ -3,6 +3,7 @@ import express, { Request, Response } from "express";
 import adminRouter from "./adminRouter";
 import sessionRouter from "./sessionRouter";
 import usersessionRouter from "./usersessionRoutes";
+import authenticate from "../middleware/authenticate";
 export const prisma = new PrismaClient();
 
 const router = express.Router();
@@ -61,6 +62,7 @@ router.post("/login", async (req: Request, res: Response) => {
     res.json({
       token,
       userId: user.id,
+      name: user.name,
     });
   } catch (error) {
     console.log(error);
